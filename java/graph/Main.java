@@ -1,5 +1,7 @@
 package graph;
 
+import java.util.ArrayList;
+
 public class Main {
     public static void main(String[] args) {
         NoWeightGraph graph = new NoWeightGraph();
@@ -11,5 +13,9 @@ public class Main {
         graph.addNewVertex(7, new Integer[] {1, 2, 6, 7});
 
         graph.print();
+        System.out.println();
+
+        ArrayList<Vertex> dfsPath = graph.dfs("2");
+        System.out.println("DFS : " + dfsPath);
     }
 }

@@ -1,17 +1,15 @@
 package graph;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class NoWeightGraph {
     NoWeightGraph() {
-        vertex = new HashMap<String, Vertex>();
-        edges = new PriorityQueue<Edge>();
+        vertex = new HashMap<>();
+        edges = new PriorityQueue<>();
     }
 
 
-    private HashMap<String, Vertex> vertex;
-    private PriorityQueue<Edge> edges;
+    private final HashMap<String, Vertex> vertex;
+    private final PriorityQueue<Edge> edges;
 
 
     public void addNewVertex(Integer identifier, Integer[] adjacents) {
@@ -42,6 +40,28 @@ public class NoWeightGraph {
             current.addAdjacent(adjacent);
             edges.add(new Edge(current, adjacent));
         }
+    }
+
+
+    public ArrayList<Vertex> dfs(String startIdentifier) {
+        Stack<Vertex> stack = new Stack<>();
+        HashSet<String> visited = new HashSet<>();
+        ArrayList<Vertex> path = new ArrayList<>();
+
+        stack.push(vertex.get(startIdentifier));
+        visited.add(startIdentifier);
+        while (!stack.isEmpty()) {
+            Vertex current = stack.pop();
+            for (Vertex neighbor : current.getAdjacent()) {
+                if (!visited.contains(neighbor.getIdentifier())) {
+                    stack.push(neighbor);
+                }
+                visited.add(neighbor.getIdentifier());
+            }
+            path.add(current);
+        }
+
+        return path;
     }
 
 

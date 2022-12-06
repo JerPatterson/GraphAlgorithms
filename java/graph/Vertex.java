@@ -37,4 +37,13 @@ public class Vertex {
             costs.put(adjVertex, weight);
         }
     }
+
+
+    public void print() {
+        System.out.println("( " + identifier + " )");
+    }
+
+    public String toString() {
+        return "( " + identifier + " )";
+    }
 }
