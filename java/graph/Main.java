@@ -8,7 +8,7 @@ public class Main {
 
         graph.addNewVertex(1, new Integer[] {4, 3});
         graph.addNewVertex(2, new Integer[] {1, 3, 4, 5, 7});
-        graph.addNewVertex(3, new Integer[] {5});
+        graph.addNewVertex(3, new Integer[] {4});
         graph.addNewVertex(4, new Integer[] {1, 7, 2});
         graph.addNewVertex(7, new Integer[] {1, 2, 6, 7});
 
@@ -19,14 +19,16 @@ public class Main {
         graph.getTransposed().print();
         System.out.println();
 
-        System.out.println("Strongly Connected Component Count : " +
-                graph.strongConnectedComponents());
+        System.out.println("Strongly Connected Components Count : " +
+                graph.getStronglyConnectedComponents().size());
+        System.out.println("Strongly Connected Components : " +
+                graph.getStronglyConnectedComponents());
         System.out.println();
 
-        ArrayList<Vertex> dfsPath = graph.dfs("2");
+        ArrayList<Vertex> dfsPath = graph.dfs("1");
         System.out.println("DFS : " + dfsPath);
 
-        ArrayList<Vertex> bfsPath = graph.bfs("2");
+        ArrayList<Vertex> bfsPath = graph.bfs("1");
         System.out.println("BFS : " + bfsPath);
     }
 }
