@@ -17,5 +17,8 @@ public class Main {
 
         ArrayList<Vertex> dfsPath = graph.dfs("2");
         System.out.println("DFS : " + dfsPath);
+
+        ArrayList<Vertex> bfsPath = graph.bfs("2");
+        System.out.println("BFS : " + bfsPath);
     }
 }

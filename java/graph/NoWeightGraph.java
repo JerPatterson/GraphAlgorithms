@@ -41,7 +41,7 @@ public class NoWeightGraph {
             edges.add(new Edge(current, adjacent));
         }
     }
-
+    
 
     public ArrayList<Vertex> dfs(String startIdentifier) {
         Stack<Vertex> stack = new Stack<>();
@@ -55,6 +55,27 @@ public class NoWeightGraph {
             for (Vertex neighbor : current.getAdjacent()) {
                 if (!visited.contains(neighbor.getIdentifier())) {
                     stack.push(neighbor);
+                }
+                visited.add(neighbor.getIdentifier());
+            }
+            path.add(current);
+        }
+
+        return path;
+    }
+
+    public ArrayList<Vertex> bfs(String startIdentifier) {
+        LinkedList<Vertex> list = new LinkedList<>();
+        HashSet<String> visited = new HashSet<>();
+        ArrayList<Vertex> path = new ArrayList<>();
+
+        list.add(vertex.get(startIdentifier));
+        visited.add(startIdentifier);
+        while (!list.isEmpty()) {
+            Vertex current = list.pop();
+            for (Vertex neighbor : current.getAdjacent()) {
+                if (!visited.contains(neighbor.getIdentifier())) {
+                    list.add(neighbor);
                 }
                 visited.add(neighbor.getIdentifier());
             }
