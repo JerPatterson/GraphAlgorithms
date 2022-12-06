@@ -79,6 +79,35 @@ public class NoWeightGraph {
     }
 
 
+    public NoWeightGraph getTransposed() {
+        NoWeightGraph newGraph = new NoWeightGraph();
+
+        for (Edge edge : edges) {
+            newGraph.addNewVertex(edge.getEdge()[1].getIdentifier(),
+                    new String[] { edge.getEdge()[0].getIdentifier() });
+        }
+
+        return newGraph;
+    }
+
+    public Integer strongConnectedComponents() {
+        int count = 0;
+        NoWeightGraph transposedGraph = getTransposed();
+        HashSet<String> visited = new HashSet<>();
+
+        for (String identifier : vertex.keySet()) {
+            if (!visited.contains(identifier)) {
+                for (Vertex neighbor : transposedGraph.dfs(identifier)) {
+                    visited.add(neighbor.getIdentifier());
+                }
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+
     public void print() {
         System.out.println("Graph Actual Nodes : " + vertex.keySet());
         for (Edge edge : edges) {

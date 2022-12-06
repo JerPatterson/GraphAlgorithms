@@ -23,12 +23,11 @@ public class Edge implements Comparable<Edge> {
 
     @Override
     public int compareTo(Edge other) {
-        if (cost != 0) {
+        if (cost > 0) {
             return cost.compareTo(other.getCost());
         }
         return (edge[0].getIdentifier() + edge[1].getIdentifier())
-                .compareTo((other.getEdge()[0].getIdentifier() +
-                        other.getEdge()[1].getIdentifier()));
+                .compareTo((other.getEdge()[0].getIdentifier() + other.getEdge()[1].getIdentifier()));
     }
 
 
