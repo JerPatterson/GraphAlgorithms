@@ -41,41 +41,34 @@ public class NoWeightGraph {
             edges.add(new Edge(current, adjacent));
         }
     }
-    
+
 
     public ArrayList<Vertex> dfs(String startIdentifier) {
-        Stack<Vertex> stack = new Stack<>();
-        HashSet<String> visited = new HashSet<>();
-        ArrayList<Vertex> path = new ArrayList<>();
-
-        stack.push(vertex.get(startIdentifier));
-        visited.add(startIdentifier);
-        while (!stack.isEmpty()) {
-            Vertex current = stack.pop();
-            for (Vertex neighbor : current.getAdjacent()) {
-                if (!visited.contains(neighbor.getIdentifier())) {
-                    stack.push(neighbor);
-                }
-                visited.add(neighbor.getIdentifier());
+        class SpecialStack<AnyType> extends LinkedList<AnyType> {
+            @Override
+            public boolean add(AnyType anyType) {
+                super.addFirst(anyType);
+                return super.getFirst() == anyType;
             }
-            path.add(current);
         }
-
-        return path;
+        return search(startIdentifier, new SpecialStack<>());
     }
 
     public ArrayList<Vertex> bfs(String startIdentifier) {
-        LinkedList<Vertex> list = new LinkedList<>();
+        return search(startIdentifier, new LinkedList<>());
+    }
+
+    private ArrayList<Vertex> search(String startIdentifier, Deque<Vertex> dataStructure) {
         HashSet<String> visited = new HashSet<>();
         ArrayList<Vertex> path = new ArrayList<>();
 
-        list.add(vertex.get(startIdentifier));
+        dataStructure.add(vertex.get(startIdentifier));
         visited.add(startIdentifier);
-        while (!list.isEmpty()) {
-            Vertex current = list.pop();
+        while (!dataStructure.isEmpty()) {
+            Vertex current = dataStructure.pop();
             for (Vertex neighbor : current.getAdjacent()) {
                 if (!visited.contains(neighbor.getIdentifier())) {
-                    list.add(neighbor);
+                    dataStructure.add(neighbor);
                 }
                 visited.add(neighbor.getIdentifier());
             }
