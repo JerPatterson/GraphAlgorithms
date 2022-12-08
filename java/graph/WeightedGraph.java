@@ -57,35 +57,6 @@ public class WeightedGraph extends UnweightedGraph {
         }
     }
 
-
-    public WeightedGraph prim() {
-        WeightedGraph minimalWeightGraph = new WeightedGraph();
-        HashSet<String> known = new HashSet<>();
-        PriorityQueue<Edge> possibleEdges = new PriorityQueue<>();
-
-        Edge cheapest;
-        Vertex current = verticesMap.get(edges.peek().getEdge()[0].getIdentifier());
-        while (known.size() != verticesMap.size() - 1) {
-            known.add(current.getIdentifier());
-            for (Vertex adjacent : current.getAdjacents()) {
-                if (!known.contains(adjacent.getIdentifier())) {
-                    possibleEdges.add(new Edge(current, adjacent, current.getCostToAdjacent(adjacent)));
-                }
-            }
-
-            cheapest = possibleEdges.poll();
-            while (known.contains(cheapest.getEdge()[1].getIdentifier())) {
-                cheapest = possibleEdges.poll();
-            }
-            minimalWeightGraph.addNewVertex(cheapest.getEdge()[0].getIdentifier(),
-                    new String[] { cheapest.getEdge()[1].getIdentifier() },
-                    new Integer[] { cheapest.getCost() });
-            current = verticesMap.get(cheapest.getEdge()[1].getIdentifier());
-        }
-
-        return minimalWeightGraph;
-    }
-
     public WeightedGraph kruskal() {
         WeightedGraph minimalWeightGraph = new WeightedGraph();
 

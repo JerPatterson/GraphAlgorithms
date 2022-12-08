@@ -184,11 +184,11 @@ public class UnweightedGraph {
 
     public String toString() {
         String str = "Graph Actual Nodes : " + vertices;
-        int i = 1;
+        int i = 0;
         for (Edge edge : edges) {
-            str += edge + "  ";
             if (i++ % 3 == 0)
                 str += "\n";
+            str += edge + "  ";
         }
         return str;
     }

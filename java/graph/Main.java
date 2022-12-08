@@ -2,6 +2,8 @@ package graph;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("Unweighted Graph Test :");
+
         UnweightedGraph graph0 = new UnweightedGraph();
         graph0.addNewVertex(1, new Integer[] {4, 3});
         graph0.addNewVertex(2, new Integer[] {1, 3, 4, 5, 7});
@@ -31,6 +33,8 @@ public class Main {
         System.out.println();
 
 
+        System.out.println("Weighted Graph Test :");
+
         WeightedGraph graph1 = new WeightedGraph();
         graph1.addNewVertex(1, new Integer[] {4, 3}, new Integer[] {24, 32});
         graph1.addNewVertex(2, new Integer[] {1, 3, 4, 5, 7}, new Integer[] {11, 31, 41, 52, 72});
@@ -39,7 +43,6 @@ public class Main {
         graph1.addNewVertex(5, new Integer[] {3, 4}, new Integer[] {3, 55});
         graph1.addNewVertex(6, new Integer[] {2}, new Integer[] {36});
         graph1.addNewVertex(7, new Integer[] {1, 2, 6, 7}, new Integer[] {17, 29, 69, 78});
-        graph1.addNewVertex(8, new Integer[] {}, new Integer[] {});
 
         System.out.println(graph1);
         System.out.println();
@@ -54,6 +57,10 @@ public class Main {
                 graph1.getStronglyConnectedComponents());
         System.out.println("Strongly connected components (transposed) : " +
                 graph1.getTransposed().getStronglyConnectedComponents());
+        System.out.println();
+        System.out.println();
+
+        System.out.println("Kruskal reduced graph : " + graph1.kruskal());
         System.out.println();
     }
 }
