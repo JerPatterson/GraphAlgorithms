@@ -22,6 +22,16 @@ public class NoWeightGraph {
         addNewVertex(identifier.toString(), stringAdjacents);
     }
 
+    public void addEdge(Edge edge) {
+        addNewVertex(edge.getEdge()[0].getIdentifier(),
+                new String[] { edge.getEdge()[1].getIdentifier() });
+    }
+
+    public void addReversedEdge(Edge edge) {
+        addNewVertex(edge.getEdge()[1].getIdentifier(),
+                new String[] { edge.getEdge()[0].getIdentifier() });
+    }
+
     public void addNewVertex(String identifier, String[] adjacents) {
         Vertex current = verticesMap.get(identifier);
         if (current == null) {
@@ -128,14 +138,11 @@ public class NoWeightGraph {
     }
 
     public NoWeightGraph getTransposed() {
-        NoWeightGraph newGraph = new NoWeightGraph();
-
+        NoWeightGraph transposedGraph = new NoWeightGraph();
         for (Edge edge : edges) {
-            newGraph.addNewVertex(edge.getEdge()[1].getIdentifier(),
-                    new String[] { edge.getEdge()[0].getIdentifier() });
+            transposedGraph.addReversedEdge(edge);
         }
-
-        return newGraph;
+        return transposedGraph;
     }
 
     public ArrayList<ArrayList<String>> getStronglyConnectedComponents() {
