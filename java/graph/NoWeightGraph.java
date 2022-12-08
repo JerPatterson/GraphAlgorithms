@@ -27,7 +27,7 @@ public class NoWeightGraph {
                 new String[] { edge.getEdge()[1].getIdentifier() });
     }
 
-    public void addReversedEdge(Edge edge) {
+    private void addReversedEdge(Edge edge) {
         addNewVertex(edge.getEdge()[1].getIdentifier(),
                 new String[] { edge.getEdge()[0].getIdentifier() });
     }
@@ -74,64 +74,69 @@ public class NoWeightGraph {
             HashSet<String> visited = new HashSet<>();
             dataStructure.add(startVertex);
             visited.add(startVertex.getIdentifier());
-            for (Vertex vertex : vertices) {
-                while (!dataStructure.isEmpty()) {
-                    Vertex current = dataStructure.pop();
-                    for (Vertex neighbor : current.getAdjacents()) {
-                        if (!visited.contains(neighbor.getIdentifier())) {
-                            dataStructure.add(neighbor);
-                            visited.add(neighbor.getIdentifier());
-                        }
+            while (!dataStructure.isEmpty()) {
+                Vertex current = dataStructure.pop();
+                for (Vertex neighbor : current.getAdjacents()) {
+                    if (!visited.contains(neighbor.getIdentifier())) {
+                        dataStructure.add(neighbor);
+                        visited.add(neighbor.getIdentifier());
                     }
-                    path.add(current);
                 }
-                if (!visited.contains(vertex.getIdentifier())) {
-                    dataStructure.add(vertex);
-                    visited.add(vertex.getIdentifier());
-                }
+                path.add(current);
             }
         }
         return path;
     }
 
-
-    public LinkedList<Vertex> getDfsClosingTimes(String identifier) {
-        return getDfsClosingTimes(verticesMap.get(identifier));
+    private ArrayList<Vertex> completeSearch(Vertex startVertex, Deque<Vertex> dataStructure) {
+        ArrayList<Vertex> completePath = new ArrayList<>();
+        dataStructure.add(startVertex);
+        for (Vertex vertex : vertices) {
+            completePath.addAll(search(dataStructure.pop(), dataStructure));
+            if (!completePath.contains(vertex.getIdentifier())) {
+                dataStructure.add(vertex);
+            }
+        }
+        return completePath;
     }
 
-    private LinkedList<Vertex> getDfsClosingTimes(Vertex startVertex) {
-        LinkedList<Vertex> closingTimes = new LinkedList<>();
-        if (startVertex != null) {
-            Stack<Vertex> stack = new Stack<>();
-            HashSet<String> visited = new HashSet<>();
-            stack.add(startVertex);
-            visited.add(startVertex.getIdentifier());
 
-            boolean stackIncrease;
-            Stack<Vertex> unstacked = new Stack<>();
-            for (Vertex vertex : vertices) {
-                while (!stack.isEmpty()) {
-                    Vertex current = stack.pop();
-                    unstacked.push(current);
-                    stackIncrease = false;
-                    for (Vertex neighbor : current.getAdjacents()) {
-                        if (!visited.contains(neighbor.getIdentifier())) {
-                            stack.add(neighbor);
-                            stackIncrease = true;
-                            visited.add(neighbor.getIdentifier());
-                        }
-                    }
-                    if (!stackIncrease) {
-                        closingTimes.push(unstacked.pop());
+    public LinkedList<Vertex> getDfsClosingTimes(String identifier) {
+        Vertex startWanted = verticesMap.get(identifier);
+        vertices.add(vertices.indexOf(startWanted), vertices.get(0));
+        vertices.add(0, startWanted);
+        return getDfsClosingTimes();
+    }
+
+    private LinkedList<Vertex> getDfsClosingTimes() {
+        LinkedList<Vertex> closingTimes = new LinkedList<>();
+        Stack<Vertex> stack = new Stack<>();
+        HashSet<String> visited = new HashSet<>();
+
+        boolean stackIncrease;
+        Stack<Vertex> unstacked = new Stack<>();
+        for (Vertex vertex : vertices) {
+            if (!visited.contains(vertex.getIdentifier())) {
+                stack.push(vertex);
+                visited.add(vertex.getIdentifier());
+            }
+            while (!stack.isEmpty()) {
+                Vertex current = stack.pop();
+                unstacked.push(current);
+                stackIncrease = false;
+                for (Vertex neighbor : current.getAdjacents()) {
+                    if (!visited.contains(neighbor.getIdentifier())) {
+                        stack.add(neighbor);
+                        stackIncrease = true;
+                        visited.add(neighbor.getIdentifier());
                     }
                 }
-                while (!unstacked.isEmpty()) {
+                if (!stackIncrease) {
                     closingTimes.push(unstacked.pop());
                 }
-                if (!visited.contains(vertex.getIdentifier())) {
-                    stack.push(vertex);
-                    visited.add(vertex.getIdentifier());
-                }
+            }
+            while (!unstacked.isEmpty()) {
+                closingTimes.push(unstacked.pop());
             }
         }
         return closingTimes;
@@ -146,30 +151,26 @@ public class NoWeightGraph {
     }
 
     public ArrayList<ArrayList<String>> getStronglyConnectedComponents() {
-        NoWeightGraph transposedGraph = getTransposed();
+        NoWeightGraph transposed = getTransposed();
         HashSet<String> visited = new HashSet<>();
-
         ArrayList<String> currentComponent;
         ArrayList<ArrayList<String>> connectedComponents = new ArrayList<>();
-        for (Vertex vertex1 : getDfsClosingTimes(edges.peek().getEdge()[0])) {
+        for (Vertex vertex1 : transposed.getDfsClosingTimes()) {
             if (!visited.contains(vertex1.getIdentifier())) {
                 currentComponent = new ArrayList<>();
-                for (Vertex vertex2 : transposedGraph.dfs(vertex1.getIdentifier())) {
-                    if (!visited.contains(vertex2.getIdentifier())) {
-                        currentComponent.add(vertex2.getIdentifier());
-                        visited.add(vertex2.getIdentifier());
-                    }
+                for (Vertex vertex2 : dfs(vertex1.getIdentifier())) {
+                    currentComponent.add(vertex2.getIdentifier());
+                    visited.add(vertex2.getIdentifier());
                 }
                 connectedComponents.add(currentComponent);
             }
         }
-
         return connectedComponents;
     }
 
 
     public void print() {
-        System.out.println("Graph Actual Nodes : " + verticesMap.keySet());
+        System.out.println("Graph Actual Nodes : " + vertices);
         for (Edge edge : edges) {
             System.out.println(edge);
         }
