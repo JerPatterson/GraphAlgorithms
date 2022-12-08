@@ -1,11 +1,9 @@
 package graph;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.PriorityQueue;
+import java.util.*;
 
-public class Graph extends NoWeightGraph {
-    Graph() {
+public class WeightedGraph extends UnweightedGraph {
+    WeightedGraph() {
         super();
     }
 
@@ -15,10 +13,17 @@ public class Graph extends NoWeightGraph {
         Integer[] weights = new Integer[adjacents.length];
         String[] newAdjacents = new String[adjacents.length];
         for (Integer adjIdentifier : adjacents) {
-            weights[i] = 0;
+            weights[i] = (int) Math.random() * 100;
             newAdjacents[i++] = adjIdentifier.toString();
         }
         addNewVertex(identifier.toString(), newAdjacents, weights);
+    }
+
+    @Override
+    public void addEdge(Edge edge) {
+        addNewVertex(edge.getEdge()[0].getIdentifier(),
+                new String[] { edge.getEdge()[1].getIdentifier() },
+                new Integer[] { (int) Math.random() * 100 });
     }
 
     public void addNewVertex(Integer identifier, Integer[] adjacents, Integer[] weights) {
@@ -35,26 +40,26 @@ public class Graph extends NoWeightGraph {
         current = verticesMap.get(identifier);
         if (current == null) {
             current = new Vertex(identifier);
+            vertices.add(current);
             verticesMap.put(identifier, current);
         }
-
         int i = 0;
         Vertex adjacent;
         for (String adjIdentifier : adjacents) {
             adjacent = verticesMap.get(adjIdentifier);
             if (adjacent == null) {
                 adjacent = new Vertex(adjIdentifier);
+                vertices.add(adjacent);
                 verticesMap.put(adjIdentifier, adjacent);
             }
-
             current.addAdjacent(adjacent, weights[i]);
             edges.add(new Edge(current, adjacent, weights[i++]));
         }
     }
 
 
-    public Graph prim() {
-        Graph minimalWeightGraph = new Graph();
+    public WeightedGraph prim() {
+        WeightedGraph minimalWeightGraph = new WeightedGraph();
         HashSet<String> known = new HashSet<>();
         PriorityQueue<Edge> possibleEdges = new PriorityQueue<>();
 
@@ -81,8 +86,8 @@ public class Graph extends NoWeightGraph {
         return minimalWeightGraph;
     }
 
-    public Graph kruskal() {
-        Graph minimalWeightGraph = new Graph();
+    public WeightedGraph kruskal() {
+        WeightedGraph minimalWeightGraph = new WeightedGraph();
 
         Edge cheapest;
         Vertex first, second;

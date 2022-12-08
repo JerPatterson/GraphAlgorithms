@@ -1,14 +1,14 @@
 package graph;
 import java.util.*;
 
-public class NoWeightGraph {
-    NoWeightGraph() {
+public class UnweightedGraph {
+    UnweightedGraph() {
         vertices = new ArrayList<>();
         verticesMap = new HashMap<>();
         edges = new PriorityQueue<>();
     }
 
-    private final ArrayList<Vertex> vertices;
+    protected final ArrayList<Vertex> vertices;
     protected final HashMap<String, Vertex> verticesMap;
     protected final PriorityQueue<Edge> edges;
 
@@ -150,8 +150,8 @@ public class NoWeightGraph {
         return closingTimes;
     }
 
-    public NoWeightGraph getTransposed() {
-        NoWeightGraph transposedGraph = new NoWeightGraph();
+    public UnweightedGraph getTransposed() {
+        UnweightedGraph transposedGraph = new UnweightedGraph();
         for (Vertex vertex : vertices) {
             transposedGraph.addNewVertex(vertex.getIdentifier(), new String[] {});
         }
@@ -162,7 +162,7 @@ public class NoWeightGraph {
     }
 
     public ArrayList<ArrayList<String>> getStronglyConnectedComponents() {
-        NoWeightGraph transposed = getTransposed();
+        UnweightedGraph transposed = getTransposed();
         HashSet<String> visited = new HashSet<>();
         ArrayList<String> currentComponent;
         ArrayList<ArrayList<String>> connectedComponents = new ArrayList<>();
