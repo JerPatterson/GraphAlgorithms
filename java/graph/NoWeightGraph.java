@@ -8,8 +8,8 @@ public class NoWeightGraph {
     }
 
 
-    private final HashMap<String, Vertex> vertex;
-    private final PriorityQueue<Edge> edges;
+    protected final HashMap<String, Vertex> vertex;
+    protected final PriorityQueue<Edge> edges;
 
 
     public void addNewVertex(Integer identifier, Integer[] adjacents) {
@@ -21,7 +21,7 @@ public class NoWeightGraph {
         addNewVertex(identifier.toString(), newAdjacents);
     }
 
-    public void addNewVertex(String identifier, String[] adjacents) {
+    private void addNewVertex(String identifier, String[] adjacents) {
         Vertex current;
         current = vertex.get(identifier);
         if (current == null) {
