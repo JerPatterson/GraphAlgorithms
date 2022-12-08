@@ -1,5 +1,6 @@
 package graph;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
@@ -75,6 +76,33 @@ public class Graph extends NoWeightGraph {
                     new String[] { cheapest.getEdge()[1].getIdentifier() },
                     new Integer[] { cheapest.getCost() });
             current = vertex.get(cheapest.getEdge()[1].getIdentifier());
+        }
+
+        return minimalWeightGraph;
+    }
+
+    public Graph kruskal() {
+        Graph minimalWeightGraph = new Graph();
+
+        Edge cheapest;
+        Vertex first, second;
+        HashMap<String, Integer> used = new HashMap<>();
+        PriorityQueue<Edge> edgesCopy = new PriorityQueue<>(edges);
+
+        while (used.size() != vertex.size()) {
+            cheapest = edgesCopy.poll();
+            first = cheapest.getEdge()[0];
+            second = cheapest.getEdge()[1];
+            if ((used.get(first.getIdentifier()) == null || used.get(first.getIdentifier()).compareTo(2) < 0)
+                    && (used.get(second.getIdentifier()) == null || used.get(second.getIdentifier()).compareTo(2) < 0)) {
+                minimalWeightGraph.addNewVertex(first.getIdentifier(),
+                        new String[] { second.getIdentifier() }, new Integer[] { cheapest.getCost() });
+
+                used.put(first.getIdentifier(), used.get(first.getIdentifier()) != null ?
+                        used.get(first.getIdentifier()) + 1 : 1);
+                used.put(second.getIdentifier(), used.get(second.getIdentifier()) != null ?
+                        used.get(second.getIdentifier()) + 1 : 1);
+            }
         }
 
         return minimalWeightGraph;

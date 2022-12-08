@@ -17,5 +17,8 @@ public class Main {
 
         graph.prim().print();
         System.out.println();
+
+        graph.kruskal().print();
+        System.out.println();
     }
 }
