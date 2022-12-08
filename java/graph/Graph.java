@@ -62,7 +62,7 @@ public class Graph extends NoWeightGraph {
         Vertex current = vertex.get(edges.peek().getEdge()[0].getIdentifier());
         while (known.size() != vertex.size() - 1) {
             known.add(current.getIdentifier());
-            for (Vertex adjacent : current.getAdjacent()) {
+            for (Vertex adjacent : current.getAdjacents()) {
                 if (!known.contains(adjacent.getIdentifier())) {
                     possibleEdges.add(new Edge(current, adjacent, current.getCostToAdjacent(adjacent)));
                 }

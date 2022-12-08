@@ -7,7 +7,6 @@ public class NoWeightGraph {
         edges = new PriorityQueue<>();
     }
 
-
     protected final HashMap<String, Vertex> vertex;
     protected final PriorityQueue<Edge> edges;
 
@@ -66,7 +65,7 @@ public class NoWeightGraph {
         visited.add(startIdentifier);
         while (!dataStructure.isEmpty()) {
             Vertex current = dataStructure.pop();
-            for (Vertex neighbor : current.getAdjacent()) {
+            for (Vertex neighbor : current.getAdjacents()) {
                 if (!visited.contains(neighbor.getIdentifier())) {
                     dataStructure.add(neighbor);
                     visited.add(neighbor.getIdentifier());
@@ -105,7 +104,7 @@ public class NoWeightGraph {
             System.out.println(current);
             unstacked.push(current);
             stackSize = stack.size();
-            for (Vertex neighbor : current.getAdjacent()) {
+            for (Vertex neighbor : current.getAdjacents()) {
                 if (!visited.contains(neighbor.getIdentifier())) {
                     stack.add(neighbor);
                     visited.add(neighbor.getIdentifier());
