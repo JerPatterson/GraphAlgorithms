@@ -150,7 +150,7 @@ public class NoWeightGraph {
     public void print() {
         System.out.println("Graph Actual Nodes : " + vertex.keySet());
         for (Edge edge : edges) {
-            edge.print();
+            System.out.println(edge);
         }
     }
 }

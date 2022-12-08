@@ -7,7 +7,7 @@ public class Vertex {
     Vertex(String name) {
         identifier = name;
         adjacents = new ArrayList<>();
-        costs = new HashMap<Vertex, Integer>();
+        costs = new HashMap<>();
     }
 
 
@@ -18,32 +18,26 @@ public class Vertex {
 
     public String getIdentifier() { return identifier; }
     public ArrayList<Vertex> getAdjacent() { return adjacents; }
-    public Integer getCostToAdjacent(Vertex adjVertex) { return costs.get(adjVertex); }
+    public Integer getCostToAdjacent(Vertex vertex) { return costs.get(vertex); }
 
 
-    public void addAdjacent(Vertex adjVertex) {
-        if (costs.get(adjVertex) == null) {
-            adjacents.add(adjVertex);
-            costs.put(adjVertex, 0);
+    public void addAdjacent(Vertex vertex) {
+        if (costs.get(vertex) == null) {
+            adjacents.add(vertex);
+            costs.put(vertex, null);
         }
     }
 
-    public void addAdjacent(Vertex adjVertex, Integer weight) {
-        if (costs.get(adjVertex) == null) {
-            adjacents.add(adjVertex);
-            costs.put(adjVertex, weight);
+    public void addAdjacent(Vertex vertex, Integer weight) {
+        if (costs.get(vertex) == null) {
+            adjacents.add(vertex);
+            costs.put(vertex, weight);
+        } else if (costs.get(vertex).compareTo(weight) > 0) {
+            costs.put(vertex, weight);
         }
-        else if (costs.get(adjVertex).compareTo(weight) > 0) {
-            costs.put(adjVertex, weight);
-        }
-    }
-
-
-    public void print() {
-        System.out.println("( " + identifier + " )");
     }
 
     public String toString() {
-        return "( " + identifier + " )";
+        return identifier;
     }
 }
