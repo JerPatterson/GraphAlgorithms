@@ -52,8 +52,24 @@ public class NoWeightGraph {
         }
     }
 
+    private void setStartVertex(String identifier) {
+        Vertex startWanted = verticesMap.get(identifier);
+        if (vertices.indexOf(startWanted) != -1) {
+            vertices.add(vertices.indexOf(startWanted), vertices.get(0));
+            vertices.add(0, startWanted);
+        }
+    }
 
-    public ArrayList<Vertex> dfs(String startIdentifier) {
+
+    public ArrayList<Vertex> dfs() {
+        return dfs(vertices.get(0).getIdentifier(), true);
+    }
+
+    public ArrayList<Vertex> bfs() {
+        return bfs(vertices.get(0).getIdentifier(), true);
+    }
+
+    public ArrayList<Vertex> dfs(String startIdentifier, Boolean completeSearch) {
         class SpecialStack<AnyType> extends LinkedList<AnyType> {
             @Override
             public boolean add(AnyType anyType) {
@@ -61,50 +77,40 @@ public class NoWeightGraph {
                 return super.getFirst() == anyType;
             }
         }
-        return search(verticesMap.get(startIdentifier), new SpecialStack<>());
+        setStartVertex(startIdentifier);
+        return search(new SpecialStack<>(), completeSearch);
     }
 
-    public ArrayList<Vertex> bfs(String startIdentifier) {
-        return search(verticesMap.get(startIdentifier), new LinkedList<>());
+    public ArrayList<Vertex> bfs(String startIdentifier, Boolean completeSearch) {
+        setStartVertex(startIdentifier);
+        return search(new LinkedList<>(), completeSearch);
     }
 
-    private ArrayList<Vertex> search(Vertex startVertex, Deque<Vertex> dataStructure) {
-        ArrayList<Vertex> path = new ArrayList<>();;
-        if (startVertex != null) {
+    private ArrayList<Vertex> search(Deque<Vertex> dataStructure, Boolean complete) {
+        ArrayList<Vertex> path = new ArrayList<>();
             HashSet<String> visited = new HashSet<>();
-            dataStructure.add(startVertex);
-            visited.add(startVertex.getIdentifier());
-            while (!dataStructure.isEmpty()) {
-                Vertex current = dataStructure.pop();
-                for (Vertex neighbor : current.getAdjacents()) {
-                    if (!visited.contains(neighbor.getIdentifier())) {
-                        dataStructure.add(neighbor);
-                        visited.add(neighbor.getIdentifier());
-                    }
+            for (Vertex vertex : (complete ? vertices : vertices.subList(0, 1))) {
+                if (!visited.contains(vertex.getIdentifier())) {
+                    dataStructure.add(vertex);
+                    visited.add(vertex.getIdentifier());
                 }
-                path.add(current);
+                while (!dataStructure.isEmpty()) {
+                    Vertex current = dataStructure.pop();
+                    for (Vertex neighbor : current.getAdjacents()) {
+                        if (!visited.contains(neighbor.getIdentifier())) {
+                            dataStructure.add(neighbor);
+                            visited.add(neighbor.getIdentifier());
+                        }
+                    }
+                    path.add(current);
+                }
             }
-        }
         return path;
-    }
-
-    private ArrayList<Vertex> completeSearch(Vertex startVertex, Deque<Vertex> dataStructure) {
-        ArrayList<Vertex> completePath = new ArrayList<>();
-        dataStructure.add(startVertex);
-        for (Vertex vertex : vertices) {
-            completePath.addAll(search(dataStructure.pop(), dataStructure));
-            if (!completePath.contains(vertex.getIdentifier())) {
-                dataStructure.add(vertex);
-            }
-        }
-        return completePath;
     }
 
 
     public LinkedList<Vertex> getDfsClosingTimes(String identifier) {
-        Vertex startWanted = verticesMap.get(identifier);
-        vertices.add(vertices.indexOf(startWanted), vertices.get(0));
-        vertices.add(0, startWanted);
+        setStartVertex(identifier);
         return getDfsClosingTimes();
     }
 
@@ -144,6 +150,9 @@ public class NoWeightGraph {
 
     public NoWeightGraph getTransposed() {
         NoWeightGraph transposedGraph = new NoWeightGraph();
+        for (Vertex vertex : vertices) {
+            transposedGraph.addNewVertex(vertex.getIdentifier(), new String[] {});
+        }
         for (Edge edge : edges) {
             transposedGraph.addReversedEdge(edge);
         }
@@ -158,7 +167,7 @@ public class NoWeightGraph {
         for (Vertex vertex1 : transposed.getDfsClosingTimes()) {
             if (!visited.contains(vertex1.getIdentifier())) {
                 currentComponent = new ArrayList<>();
-                for (Vertex vertex2 : dfs(vertex1.getIdentifier())) {
+                for (Vertex vertex2 : dfs(vertex1.getIdentifier(), false)) {
                     currentComponent.add(vertex2.getIdentifier());
                     visited.add(vertex2.getIdentifier());
                 }
