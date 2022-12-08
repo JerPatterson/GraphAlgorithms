@@ -2,7 +2,7 @@ package graph;
 
 public class Main {
     public static void main(String[] args) {
-        NoWeightGraph graph0 = new NoWeightGraph();
+        UnweightedGraph graph0 = new UnweightedGraph();
         graph0.addNewVertex(1, new Integer[] {4, 3});
         graph0.addNewVertex(2, new Integer[] {1, 3, 4, 5, 7});
         graph0.addNewVertex(3, new Integer[] {4});
@@ -17,15 +17,21 @@ public class Main {
         System.out.println(graph0);
         System.out.println();
 
-        System.out.println(graph0.bfs());
-        System.out.println(graph0.dfs());
-        System.out.println(graph0.getDfsClosingTimes("1"));
-        System.out.println(graph0.getTransposed().getDfsClosingTimes("1"));
-        System.out.println(graph0.getStronglyConnectedComponents());
+        System.out.println("BFS : " + graph0.bfs());
+        System.out.println("DFS : " + graph0.dfs());
+        System.out.println("DFS closing times: " +
+                graph0.getDfsClosingTimes("1"));
+        System.out.println("DFS closing times (transposed) : " +
+                graph0.getTransposed().getDfsClosingTimes("1"));
+        System.out.println("Strongly connected components : " +
+                graph0.getStronglyConnectedComponents());
+        System.out.println("Strongly connected components (transposed) : " +
+                graph0.getTransposed().getStronglyConnectedComponents());
+        System.out.println();
         System.out.println();
 
 
-        Graph graph1 = new Graph();
+        WeightedGraph graph1 = new WeightedGraph();
         graph1.addNewVertex(1, new Integer[] {4, 3}, new Integer[] {24, 32});
         graph1.addNewVertex(2, new Integer[] {1, 3, 4, 5, 7}, new Integer[] {11, 31, 41, 52, 72});
         graph1.addNewVertex(3, new Integer[] {4}, new Integer[] {14});
@@ -33,5 +39,21 @@ public class Main {
         graph1.addNewVertex(5, new Integer[] {3, 4}, new Integer[] {3, 55});
         graph1.addNewVertex(6, new Integer[] {2}, new Integer[] {36});
         graph1.addNewVertex(7, new Integer[] {1, 2, 6, 7}, new Integer[] {17, 29, 69, 78});
+        graph1.addNewVertex(8, new Integer[] {}, new Integer[] {});
+
+        System.out.println(graph1);
+        System.out.println();
+
+        System.out.println("BFS : " + graph1.bfs());
+        System.out.println("DFS : " + graph1.dfs());
+        System.out.println("DFS closing times : " +
+                graph1.getDfsClosingTimes("1"));
+        System.out.println("DFS closing times (transposed) : " +
+                graph1.getTransposed().getDfsClosingTimes("1"));
+        System.out.println("Strongly connected components : " +
+                graph1.getStronglyConnectedComponents());
+        System.out.println("Strongly connected components (transposed) : " +
+                graph1.getTransposed().getStronglyConnectedComponents());
+        System.out.println();
     }
 }
