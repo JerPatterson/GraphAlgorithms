@@ -21,7 +21,7 @@ public class NoWeightGraph {
         addNewVertex(identifier.toString(), newAdjacents);
     }
 
-    private void addNewVertex(String identifier, String[] adjacents) {
+    public void addNewVertex(String identifier, String[] adjacents) {
         Vertex current;
         current = vertex.get(identifier);
         if (current == null) {

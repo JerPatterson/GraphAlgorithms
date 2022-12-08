@@ -1,5 +1,8 @@
 package graph;
 
+import java.util.HashSet;
+import java.util.PriorityQueue;
+
 public class Graph extends NoWeightGraph {
     Graph() {
         super();
@@ -26,7 +29,7 @@ public class Graph extends NoWeightGraph {
         addNewVertex(identifier.toString(), newAdjacents, weights);
     }
 
-    private void addNewVertex(String identifier, String[] adjacents, Integer[] weights) {
+    public void addNewVertex(String identifier, String[] adjacents, Integer[] weights) {
         Vertex current;
         current = vertex.get(identifier);
         if (current == null) {
@@ -46,5 +49,34 @@ public class Graph extends NoWeightGraph {
             current.addAdjacent(adjacent, weights[i]);
             edges.add(new Edge(current, adjacent, weights[i++]));
         }
+    }
+
+
+    public Graph prim() {
+        Graph minimalWeightGraph = new Graph();
+        HashSet<String> known = new HashSet<>();
+        PriorityQueue<Edge> possibleEdges = new PriorityQueue<>();
+
+        Edge cheapest;
+        Vertex current = vertex.get(edges.peek().getEdge()[0].getIdentifier());
+        while (known.size() != vertex.size() - 1) {
+            known.add(current.getIdentifier());
+            for (Vertex adjacent : current.getAdjacent()) {
+                if (!known.contains(adjacent.getIdentifier())) {
+                    possibleEdges.add(new Edge(current, adjacent, current.getCostToAdjacent(adjacent)));
+                }
+            }
+
+            cheapest = possibleEdges.poll();
+            while (known.contains(cheapest.getEdge()[1].getIdentifier())) {
+                cheapest = possibleEdges.poll();
+            }
+            minimalWeightGraph.addNewVertex(cheapest.getEdge()[0].getIdentifier(),
+                    new String[] { cheapest.getEdge()[1].getIdentifier() },
+                    new Integer[] { cheapest.getCost() });
+            current = vertex.get(cheapest.getEdge()[1].getIdentifier());
+        }
+
+        return minimalWeightGraph;
     }
 }

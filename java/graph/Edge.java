@@ -42,6 +42,9 @@ public class Edge implements Comparable<Edge> {
     }
 
     public String toString() {
-        return "< " + edge[0].getIdentifier() + " , " + edge[1].getIdentifier() + " >";
+        if (cost == 0) {
+            return "< " + edge[0].getIdentifier() + " , " + edge[1].getIdentifier() + " >";
+        }
+        return "< " + edge[0].getIdentifier() + " , " + edge[1].getIdentifier() + " | " + cost + " >";
     }
 }
