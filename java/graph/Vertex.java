@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 public class Vertex {
-    Vertex() {
-        this(null);
+    Vertex(Vertex vertex) {
+        identifier = vertex.identifier;
+        adjacents = vertex.adjacents;
+        costs = vertex.costs;
     }
 
     Vertex(String name) {
@@ -34,14 +36,14 @@ public class Vertex {
 
     public void addAdjacent(Vertex vertex) {
         if (costs.get(vertex) == null) {
-            adjacents.add(new NeighborVertex(vertex.getIdentifier(), null));
+            adjacents.add(new NeighborVertex(vertex, null));
             costs.put(vertex.getIdentifier(), null);
         }
     }
 
     public void addAdjacent(Vertex vertex, Integer weight) {
         if (costs.get(vertex) == null) {
-            adjacents.add(new NeighborVertex(vertex.getIdentifier(), weight));
+            adjacents.add(new NeighborVertex(vertex, weight));
             costs.put(vertex.getIdentifier(), weight);
         }
     }

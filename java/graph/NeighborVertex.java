@@ -1,8 +1,8 @@
 package graph;
 
 public class NeighborVertex extends Vertex implements Comparable<NeighborVertex> {
-    NeighborVertex(String identifier, Integer weightTo) {
-        super(identifier);
+    NeighborVertex(Vertex vertex, Integer weightTo) {
+        super(vertex);
         cost = weightTo;
     }
 

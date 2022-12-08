@@ -32,19 +32,19 @@ public class Graph extends NoWeightGraph {
 
     public void addNewVertex(String identifier, String[] adjacents, Integer[] weights) {
         Vertex current;
-        current = vertex.get(identifier);
+        current = verticesMap.get(identifier);
         if (current == null) {
             current = new Vertex(identifier);
-            vertex.put(identifier, current);
+            verticesMap.put(identifier, current);
         }
 
         int i = 0;
         Vertex adjacent;
         for (String adjIdentifier : adjacents) {
-            adjacent = vertex.get(adjIdentifier);
+            adjacent = verticesMap.get(adjIdentifier);
             if (adjacent == null) {
                 adjacent = new Vertex(adjIdentifier);
-                vertex.put(adjIdentifier, adjacent);
+                verticesMap.put(adjIdentifier, adjacent);
             }
 
             current.addAdjacent(adjacent, weights[i]);
@@ -59,8 +59,8 @@ public class Graph extends NoWeightGraph {
         PriorityQueue<Edge> possibleEdges = new PriorityQueue<>();
 
         Edge cheapest;
-        Vertex current = vertex.get(edges.peek().getEdge()[0].getIdentifier());
-        while (known.size() != vertex.size() - 1) {
+        Vertex current = verticesMap.get(edges.peek().getEdge()[0].getIdentifier());
+        while (known.size() != verticesMap.size() - 1) {
             known.add(current.getIdentifier());
             for (Vertex adjacent : current.getAdjacents()) {
                 if (!known.contains(adjacent.getIdentifier())) {
@@ -75,7 +75,7 @@ public class Graph extends NoWeightGraph {
             minimalWeightGraph.addNewVertex(cheapest.getEdge()[0].getIdentifier(),
                     new String[] { cheapest.getEdge()[1].getIdentifier() },
                     new Integer[] { cheapest.getCost() });
-            current = vertex.get(cheapest.getEdge()[1].getIdentifier());
+            current = verticesMap.get(cheapest.getEdge()[1].getIdentifier());
         }
 
         return minimalWeightGraph;
@@ -89,7 +89,7 @@ public class Graph extends NoWeightGraph {
         HashMap<String, Integer> used = new HashMap<>();
         PriorityQueue<Edge> edgesCopy = new PriorityQueue<>(edges);
 
-        while (used.size() != vertex.size()) {
+        while (used.size() != verticesMap.size()) {
             cheapest = edgesCopy.poll();
             first = cheapest.getEdge()[0];
             second = cheapest.getEdge()[1];

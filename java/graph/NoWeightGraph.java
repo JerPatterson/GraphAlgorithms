@@ -3,39 +3,40 @@ import java.util.*;
 
 public class NoWeightGraph {
     NoWeightGraph() {
-        vertex = new HashMap<>();
+        vertices = new ArrayList<>();
+        verticesMap = new HashMap<>();
         edges = new PriorityQueue<>();
     }
 
-    protected final HashMap<String, Vertex> vertex;
+    private final ArrayList<Vertex> vertices;
+    protected final HashMap<String, Vertex> verticesMap;
     protected final PriorityQueue<Edge> edges;
 
 
     public void addNewVertex(Integer identifier, Integer[] adjacents) {
         int i = 0;
-        String[] newAdjacents = new String[adjacents.length];
+        String[] stringAdjacents = new String[adjacents.length];
         for (Integer adjIdentifier : adjacents) {
-            newAdjacents[i++] = adjIdentifier.toString();
+            stringAdjacents[i++] = adjIdentifier.toString();
         }
-        addNewVertex(identifier.toString(), newAdjacents);
+        addNewVertex(identifier.toString(), stringAdjacents);
     }
 
     public void addNewVertex(String identifier, String[] adjacents) {
-        Vertex current;
-        current = vertex.get(identifier);
+        Vertex current = verticesMap.get(identifier);
         if (current == null) {
             current = new Vertex(identifier);
-            vertex.put(identifier, current);
+            vertices.add(current);
+            verticesMap.put(identifier, current);
         }
-
         Vertex adjacent;
         for (String adjIdentifier : adjacents) {
-            adjacent = vertex.get(adjIdentifier);
+            adjacent = verticesMap.get(adjIdentifier);
             if (adjacent == null) {
                 adjacent = new Vertex(adjIdentifier);
-                vertex.put(adjIdentifier, adjacent);
+                vertices.add(adjacent);
+                verticesMap.put(adjIdentifier, adjacent);
             }
-
             current.addAdjacent(adjacent);
             edges.add(new Edge(current, adjacent));
         }
@@ -50,30 +51,36 @@ public class NoWeightGraph {
                 return super.getFirst() == anyType;
             }
         }
-        return search(startIdentifier, new SpecialStack<>());
+        return search(verticesMap.get(startIdentifier), new SpecialStack<>());
     }
 
     public ArrayList<Vertex> bfs(String startIdentifier) {
-        return search(startIdentifier, new LinkedList<>());
+        return search(verticesMap.get(startIdentifier), new LinkedList<>());
     }
 
-    private ArrayList<Vertex> search(String startIdentifier, Deque<Vertex> dataStructure) {
-        HashSet<String> visited = new HashSet<>();
+    private ArrayList<Vertex> search(Vertex startVertex, Deque<Vertex> dataStructure) {
         ArrayList<Vertex> path = new ArrayList<>();
-
-        dataStructure.add(vertex.get(startIdentifier));
-        visited.add(startIdentifier);
-        while (!dataStructure.isEmpty()) {
-            Vertex current = dataStructure.pop();
-            for (Vertex neighbor : current.getAdjacents()) {
-                if (!visited.contains(neighbor.getIdentifier())) {
-                    dataStructure.add(neighbor);
-                    visited.add(neighbor.getIdentifier());
+        HashSet<String> visited = new HashSet<>();
+        if (startVertex != null) {
+            dataStructure.add(startVertex);
+            visited.add(startVertex.getIdentifier());
+            for (Vertex vertex : vertices) {
+                while (!dataStructure.isEmpty()) {
+                    Vertex current = dataStructure.pop();
+                    for (Vertex neighbor : current.getAdjacents()) {
+                        if (!visited.contains(neighbor.getIdentifier())) {
+                            dataStructure.add(neighbor);
+                            visited.add(neighbor.getIdentifier());
+                        }
+                    }
+                    path.add(current);
+                }
+                if (!visited.contains(vertex.getIdentifier())) {
+                    dataStructure.add(vertex);
+                    visited.add(vertex.getIdentifier());
                 }
             }
-            path.add(current);
         }
-
         return path;
     }
 
@@ -97,7 +104,7 @@ public class NoWeightGraph {
         Stack<Vertex> unstacked = new Stack<>();
         HashSet<String> visited = new HashSet<>();
 
-        stack.add(vertex.get(startIdentifier));
+        stack.add(verticesMap.get(startIdentifier));
         visited.add(startIdentifier);
         while (!stack.isEmpty()) {
             Vertex current = stack.pop();
@@ -118,7 +125,6 @@ public class NoWeightGraph {
             closingTimes.push(unstacked.pop());
         }
 
-        System.out.println(closingTimes);
         return closingTimes;
     }
 
@@ -147,7 +153,7 @@ public class NoWeightGraph {
 
 
     public void print() {
-        System.out.println("Graph Actual Nodes : " + vertex.keySet());
+        System.out.println("Graph Actual Nodes : " + verticesMap.keySet());
         for (Edge edge : edges) {
             System.out.println(edge);
         }
