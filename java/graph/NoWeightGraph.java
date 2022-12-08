@@ -65,10 +65,6 @@ public class NoWeightGraph {
         return dfs(vertices.get(0).getIdentifier(), true);
     }
 
-    public ArrayList<Vertex> bfs() {
-        return bfs(vertices.get(0).getIdentifier(), true);
-    }
-
     public ArrayList<Vertex> dfs(String startIdentifier, Boolean completeSearch) {
         class SpecialStack<AnyType> extends LinkedList<AnyType> {
             @Override
@@ -81,30 +77,36 @@ public class NoWeightGraph {
         return search(new SpecialStack<>(), completeSearch);
     }
 
+
+    public ArrayList<Vertex> bfs() {
+        return bfs(vertices.get(0).getIdentifier(), true);
+    }
+
     public ArrayList<Vertex> bfs(String startIdentifier, Boolean completeSearch) {
         setStartVertex(startIdentifier);
         return search(new LinkedList<>(), completeSearch);
     }
 
+
     private ArrayList<Vertex> search(Deque<Vertex> dataStructure, Boolean complete) {
         ArrayList<Vertex> path = new ArrayList<>();
-            HashSet<String> visited = new HashSet<>();
-            for (Vertex vertex : (complete ? vertices : vertices.subList(0, 1))) {
-                if (!visited.contains(vertex.getIdentifier())) {
-                    dataStructure.add(vertex);
-                    visited.add(vertex.getIdentifier());
-                }
-                while (!dataStructure.isEmpty()) {
-                    Vertex current = dataStructure.pop();
-                    for (Vertex neighbor : current.getAdjacents()) {
-                        if (!visited.contains(neighbor.getIdentifier())) {
-                            dataStructure.add(neighbor);
-                            visited.add(neighbor.getIdentifier());
-                        }
-                    }
-                    path.add(current);
-                }
+        HashSet<String> visited = new HashSet<>();
+        for (Vertex vertex : (complete ? vertices : vertices.subList(0, 1))) {
+            if (!visited.contains(vertex.getIdentifier())) {
+                dataStructure.add(vertex);
+                visited.add(vertex.getIdentifier());
             }
+            while (!dataStructure.isEmpty()) {
+                Vertex current = dataStructure.pop();
+                for (Vertex neighbor : current.getAdjacents()) {
+                    if (!visited.contains(neighbor.getIdentifier())) {
+                        dataStructure.add(neighbor);
+                        visited.add(neighbor.getIdentifier());
+                    }
+                }
+                path.add(current);
+            }
+        }
         return path;
     }
 
@@ -168,8 +170,10 @@ public class NoWeightGraph {
             if (!visited.contains(vertex1.getIdentifier())) {
                 currentComponent = new ArrayList<>();
                 for (Vertex vertex2 : dfs(vertex1.getIdentifier(), false)) {
-                    currentComponent.add(vertex2.getIdentifier());
-                    visited.add(vertex2.getIdentifier());
+                    if (!visited.contains(vertex2.getIdentifier())) {
+                        currentComponent.add(vertex2.getIdentifier());
+                        visited.add(vertex2.getIdentifier());
+                    }
                 }
                 connectedComponents.add(currentComponent);
             }
@@ -178,10 +182,14 @@ public class NoWeightGraph {
     }
 
 
-    public void print() {
-        System.out.println("Graph Actual Nodes : " + vertices);
+    public String toString() {
+        String str = "Graph Actual Nodes : " + vertices;
+        int i = 1;
         for (Edge edge : edges) {
-            System.out.println(edge);
+            str += edge + "  ";
+            if (i++ % 3 == 0)
+                str += "\n";
         }
+        return str;
     }
 }
