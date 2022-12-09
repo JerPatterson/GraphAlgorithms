@@ -121,7 +121,7 @@ public class UnweightedGraph {
         HashSet<String> visited = new HashSet<>();
 
         boolean stackIncrease;
-        Stack<Vertex> unstacked = new Stack<>();
+        LinkedList<Vertex> unstacked = new LinkedList<>();
         for (Vertex vertex : vertices) {
             if (!visited.contains(vertex.getIdentifier())) {
                 stack.push(vertex);
@@ -139,7 +139,10 @@ public class UnweightedGraph {
                     }
                 }
                 if (!stackIncrease) {
-                    closingTimes.push(unstacked.pop());
+                    while (!unstacked.isEmpty() && !stack.isEmpty() &&
+                            unstacked.peek().getCostToAdjacent(stack.peek().getIdentifier()) == null) {
+                        closingTimes.push(unstacked.pop());
+                    }
                 }
             }
             while (!unstacked.isEmpty()) {
