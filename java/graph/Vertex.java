@@ -31,12 +31,11 @@ public class Vertex {
         return adjacentsReturn;
     }
     public Integer getCostToAdjacent(String identifier) { return costs.get(identifier); }
-    public Integer getCostToAdjacent(Vertex vertex) { return costs.get(vertex.getIdentifier()); }
 
 
     public void addAdjacent(Vertex vertex) {
         if (costs.get(vertex) == null) {
-            adjacents.add(new NeighborVertex(vertex, null));
+            adjacents.add(new NeighborVertex(vertex, 0));
             costs.put(vertex.getIdentifier(), null);
         }
     }

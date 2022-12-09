@@ -2,7 +2,7 @@ package graph;
 
 public class Edge implements Comparable<Edge> {
     Edge(Vertex start, Vertex end) {
-        cost = null;
+        cost = 0;
         first = start;
         second = end;
     }

@@ -1,8 +1,6 @@
 package graph;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.PriorityQueue;
 
 public class UndirectedWeightedGraph extends WeightedGraph {
     UndirectedWeightedGraph() {
