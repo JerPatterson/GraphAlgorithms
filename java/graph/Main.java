@@ -29,6 +29,8 @@ public class Main {
                 graph0.getStronglyConnectedComponents());
         System.out.println("Strongly connected components (transposed) : " +
                 graph0.getTransposed().getStronglyConnectedComponents());
+        System.out.println("Topological Sort : " +
+                graph0.topologicalSort());
         System.out.println();
         System.out.println();
 
@@ -60,6 +62,8 @@ public class Main {
                 graph1.getStronglyConnectedComponents());
         System.out.println("Strongly connected components (transposed) : " +
                 graph1.getTransposed().getStronglyConnectedComponents());
+        System.out.println("Topological Sort : " +
+                graph1.topologicalSort());
         System.out.println();
 
         System.out.println("Kruskal reduced graph : " + graph1.kruskal());
@@ -92,10 +96,48 @@ public class Main {
                 graph2.getStronglyConnectedComponents());
         System.out.println("Strongly connected components (transposed) : " +
                 graph2.getTransposed().getStronglyConnectedComponents());
+        System.out.println("Topological Sort : " +
+                graph2.topologicalSort());
         System.out.println();
 
         System.out.println("Kruskal reduced graph : " + graph2.kruskal());
         System.out.println("Prim reduced graph : " + graph2.prim());
+        System.out.println();
+        System.out.println();
+
+
+        System.out.println("DAG Test :");
+
+        WeightedGraph dag = new WeightedGraph();
+        dag.addNewVertex(1, new Integer[] {4, 2}, new Integer[] {32, 20});
+        dag.addNewVertex(2, new Integer[] {3}, new Integer[] {11});
+        dag.addNewVertex(3, new Integer[] {4, 5}, new Integer[] {41, 57});
+        dag.addNewVertex(4, new Integer[] {7}, new Integer[] {28});
+        dag.addNewVertex(5, new Integer[] {6}, new Integer[] {35});
+        dag.addNewVertex(6, new Integer[] {}, new Integer[] {});
+        dag.addNewVertex(7, new Integer[] {6}, new Integer[] {17});
+
+        System.out.println(dag);
+        System.out.println(dag.getTransposed());
+        System.out.println();
+
+        System.out.println("BFS : " + dag.bfs());
+        System.out.println("DFS : " + dag.dfs());
+        System.out.println("DFS (transposed) : " + dag.getTransposed().dfs());
+        System.out.println("DFS closing times : " +
+                dag.getDfsClosingTimes("1"));
+        System.out.println("DFS closing times (transposed) : " +
+                dag.getTransposed().getDfsClosingTimes("1"));
+        System.out.println("Strongly connected components : " +
+                dag.getStronglyConnectedComponents());
+        System.out.println("Strongly connected components (transposed) : " +
+                dag.getTransposed().getStronglyConnectedComponents());
+        System.out.println("Topological Sort : " +
+                dag.topologicalSort());
+        System.out.println();
+
+        System.out.println("Kruskal reduced graph : " + dag.kruskal());
+        System.out.println("Prim reduced graph : " + dag.prim());
         System.out.println();
         System.out.println();
     }
