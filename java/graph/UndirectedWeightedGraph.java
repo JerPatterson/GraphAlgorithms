@@ -1,5 +1,6 @@
 package graph;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
@@ -19,6 +20,11 @@ public class UndirectedWeightedGraph extends WeightedGraph {
         }
     }
 
+
+    @Override
+    public ArrayList<String> topologicalSort() {
+        return null;
+    }
 
     @Override
     public UndirectedWeightedGraph getTransposed() {

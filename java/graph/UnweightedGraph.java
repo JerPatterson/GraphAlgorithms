@@ -3,12 +3,12 @@ import java.util.*;
 
 public class UnweightedGraph {
     UnweightedGraph() {
-        vertices = new ArrayList<>();
+        vertices = new LinkedList<>();
         verticesMap = new HashMap<>();
         edges = new PriorityQueue<>();
     }
 
-    protected final ArrayList<Vertex> vertices;
+    protected final LinkedList<Vertex> vertices;
     protected final HashMap<String, Vertex> verticesMap;
     protected final PriorityQueue<Edge> edges;
 
@@ -54,8 +54,7 @@ public class UnweightedGraph {
 
     private void setStartVertex(String identifier) {
         Vertex startWanted = verticesMap.get(identifier);
-        if (vertices.contains(startWanted)) {
-            vertices.add(vertices.indexOf(startWanted), vertices.get(0));
+        if (vertices.remove(startWanted)) {
             vertices.add(0, startWanted);
         }
     }
@@ -179,6 +178,42 @@ public class UnweightedGraph {
             }
         }
         return connectedComponents;
+    }
+
+
+    private HashMap<String, Integer> computeVerticesIndegree() {
+        HashMap<String, Integer> inDegrees = new HashMap<>();
+        for (Vertex vertex : vertices) {
+            inDegrees.putIfAbsent(vertex.getIdentifier(), 0);
+            for (Vertex adjacent : vertex.getAdjacents()) {
+                inDegrees.merge(adjacent.getIdentifier(), 1, Integer::sum);
+            }
+        }
+        return inDegrees;
+    }
+
+    public ArrayList<String> topologicalSort() {
+        LinkedList<Vertex> queue = new LinkedList<>();
+        ArrayList<String> topologicalOrder = new ArrayList<>();
+        HashMap<String, Integer> inDegrees = computeVerticesIndegree();
+        for (Vertex vertex : vertices) {
+            if (inDegrees.get(vertex.getIdentifier()).compareTo(0) == 0) {
+                queue.add(vertex);
+            }
+        }
+
+        Vertex vertex;
+        while (!queue.isEmpty()) {
+            vertex = queue.pop();
+            topologicalOrder.add(vertex.getIdentifier());
+            for (Vertex adjacent : vertex.getAdjacents()) {
+                inDegrees.put(adjacent.getIdentifier(), inDegrees.get(adjacent.getIdentifier()) - 1);
+                if (inDegrees.get(adjacent.getIdentifier()).compareTo(0) == 0) {
+                    queue.add(adjacent);
+                }
+            }
+        }
+        return topologicalOrder.size() != vertices.size() ? null : topologicalOrder;
     }
 
 
