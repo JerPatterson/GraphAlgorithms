@@ -36,7 +36,7 @@ public class Vertex {
     public void addAdjacent(Vertex vertex) {
         if (costs.get(vertex) == null) {
             adjacents.add(new NeighborVertex(vertex, 0));
-            costs.put(vertex.getIdentifier(), null);
+            costs.put(vertex.getIdentifier(), 0);
         }
     }
 

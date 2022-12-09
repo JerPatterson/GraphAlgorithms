@@ -33,6 +33,6 @@ public class Edge implements Comparable<Edge> {
     }
 
     public String toString() {
-        return "< " + first + " , " + second + (cost == null ? " >" : " | " + cost + " >");
+        return "< " + first + " , " + second + (cost == 0 ? " >" : " | " + cost + " >");
     }
 }
