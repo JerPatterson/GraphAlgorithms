@@ -54,7 +54,7 @@ public class UnweightedGraph {
 
     private void setStartVertex(String identifier) {
         Vertex startWanted = verticesMap.get(identifier);
-        if (vertices.indexOf(startWanted) != -1) {
+        if (vertices.contains(startWanted)) {
             vertices.add(vertices.indexOf(startWanted), vertices.get(0));
             vertices.add(0, startWanted);
         }
@@ -183,13 +183,13 @@ public class UnweightedGraph {
 
 
     public String toString() {
-        String str = "Graph Actual Nodes : " + vertices;
+        StringBuilder str = new StringBuilder("Graph Actual Nodes : " + vertices);
         int i = 0;
         for (Edge edge : edges) {
             if (i++ % 3 == 0)
-                str += "\n";
-            str += edge + "  ";
+                str.append("\n");
+            str.append(edge).append("  ");
         }
-        return str;
+        return str.toString();
     }
 }
