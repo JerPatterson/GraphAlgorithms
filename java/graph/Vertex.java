@@ -16,7 +16,7 @@ public class Vertex {
         costs = new HashMap<>();
     }
 
-    private String identifier;
+    private final String identifier;
     private final PriorityQueue<NeighborVertex> adjacents;
     private final HashMap<String, Integer> costs;
 
@@ -34,14 +34,14 @@ public class Vertex {
 
 
     public void addAdjacent(Vertex vertex) {
-        if (costs.get(vertex) == null) {
+        if (costs.get(vertex.getIdentifier()) == null) {
             adjacents.add(new NeighborVertex(vertex, 0));
             costs.put(vertex.getIdentifier(), 0);
         }
     }
 
     public void addAdjacent(Vertex vertex, Integer weight) {
-        if (costs.get(vertex) == null) {
+        if (costs.get(vertex.getIdentifier()) == null) {
             adjacents.add(new NeighborVertex(vertex, weight));
             costs.put(vertex.getIdentifier(), weight);
         }

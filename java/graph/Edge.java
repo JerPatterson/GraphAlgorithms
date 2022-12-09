@@ -14,7 +14,7 @@ public class Edge implements Comparable<Edge> {
     }
 
 
-    private Integer cost;
+    private final Integer cost;
     private final Vertex first;
     private final Vertex second;
 

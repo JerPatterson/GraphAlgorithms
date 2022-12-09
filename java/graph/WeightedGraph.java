@@ -14,7 +14,7 @@ public class WeightedGraph extends UnweightedGraph {
         Integer[] weights = new Integer[adjacents.length];
         String[] newAdjacents = new String[adjacents.length];
         for (Integer adjIdentifier : adjacents) {
-            weights[i] = (int) Math.random() * 100;
+            weights[i] = (int) (Math.random() * 100);
             newAdjacents[i++] = adjIdentifier.toString();
         }
         addNewVertex(identifier.toString(), newAdjacents, weights);
@@ -62,11 +62,15 @@ public class WeightedGraph extends UnweightedGraph {
         WeightedGraph minimalWeightTree = new WeightedGraph();
 
         Edge cheapest;
-        Vertex current = edges.peek().getEdge()[0];
+        Vertex current = null;
         HashSet<String> known = new HashSet<>();
-        PriorityQueue<Edge> accessible = new PriorityQueue<>();
-        while (known.size() != vertices.size() - 1) {
+        if (!edges.isEmpty()) {
+            current = edges.peek().getEdge()[0];
             known.add(current.getIdentifier());
+        }
+
+        PriorityQueue<Edge> accessible = new PriorityQueue<>();
+        while (known.size() != vertices.size()) {
             for (NeighborVertex adjacent : current.getAdjacents()) {
                 if (!known.contains(adjacent.getIdentifier())) {
                     accessible.add(new Edge(current, adjacent, adjacent.getCostAway()));
@@ -82,6 +86,7 @@ public class WeightedGraph extends UnweightedGraph {
             } else {
                 break;
             }
+            known.add(current.getIdentifier());
         }
         return minimalWeightTree;
     }
@@ -129,7 +134,6 @@ public class WeightedGraph extends UnweightedGraph {
                     for (String id : unions.get(used.get(second))) {
                         used.put(id, used.get(first));
                     }
-                    unions.remove(second);
                 }
             } else {
                 break;
@@ -167,8 +171,7 @@ public class WeightedGraph extends UnweightedGraph {
             if (pathCosts.get(current.getIdentifier()) == null ||
                     pathCosts.get(current.getIdentifier()).compareTo(pathCosts.get(parent) + cheapest.getCost()) > 0) {
                 pathCosts.put(current.getIdentifier(), pathCosts.get(parent) + cheapest.getCost());
-                path = new ArrayList<>();
-                path.addAll(paths.get(parent).subList(0, paths.get(parent).size() - 1));
+                path = new ArrayList<>(paths.get(parent).subList(0, paths.get(parent).size() - 1));
                 path.add(current.getIdentifier());
                 paths.put(current.getIdentifier(), path);
                 path.add("Cost:" + pathCosts.get(current.getIdentifier()));
