@@ -137,4 +137,50 @@ public class WeightedGraph extends UnweightedGraph {
         }
         return minimalWeightTree;
     }
+
+
+    public HashMap<String, ArrayList<String>> dijkstra(String identifier) {
+        ArrayList<String> path;
+        HashSet<String> known = new HashSet<>();
+        HashMap<String, Integer> pathCosts = new HashMap<>();
+        HashMap<String, ArrayList<String>> paths = new HashMap<>();
+
+        path = new ArrayList<>();
+        path.add(identifier);
+        path.add("Cost:" + 0);
+        Vertex current = verticesMap.get(identifier);
+        paths.put(current.getIdentifier(), path);
+        pathCosts.put(current.getIdentifier(), 0);
+
+        Edge cheapest;
+        PriorityQueue<Edge> accessible = new PriorityQueue<>();
+        for (NeighborVertex adjacent : current.getAdjacents()) {
+            accessible.add(new Edge(current, adjacent, adjacent.getCostAway()));
+        }
+        known.add(current.getIdentifier());
+
+        String parent;
+        while (!accessible.isEmpty()) {
+            cheapest = accessible.poll();
+            current = cheapest.getEdge()[1];
+            parent = cheapest.getEdge()[0].getIdentifier();
+            if (pathCosts.get(current.getIdentifier()) == null ||
+                    pathCosts.get(current.getIdentifier()).compareTo(pathCosts.get(parent) + cheapest.getCost()) > 0) {
+                pathCosts.put(current.getIdentifier(), pathCosts.get(parent) + cheapest.getCost());
+                path = new ArrayList<>();
+                path.addAll(paths.get(parent).subList(0, paths.get(parent).size() - 1));
+                path.add(current.getIdentifier());
+                paths.put(current.getIdentifier(), path);
+                path.add("Cost:" + pathCosts.get(current.getIdentifier()));
+            }
+
+            for (NeighborVertex adjacent : current.getAdjacents()) {
+                if (!known.contains(current.getIdentifier())) {
+                    accessible.add(new Edge(current, adjacent, adjacent.getCostAway()));
+                }
+            }
+            known.add(current.getIdentifier());
+        }
+        return paths;
+    }
 }
