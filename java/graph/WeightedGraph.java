@@ -7,6 +7,7 @@ public class WeightedGraph extends UnweightedGraph {
         super();
     }
 
+
     @Override
     public void addNewVertex(Integer identifier, Integer[] adjacents) {
         int i = 0;
@@ -23,7 +24,7 @@ public class WeightedGraph extends UnweightedGraph {
     public void addEdge(Edge edge) {
         addNewVertex(edge.getEdge()[0].getIdentifier(),
                 new String[] { edge.getEdge()[1].getIdentifier() },
-                new Integer[] { (int) Math.random() * 100 });
+                new Integer[] { edge.getCost() });
     }
 
     public void addNewVertex(Integer identifier, Integer[] adjacents, Integer[] weights) {
@@ -35,9 +36,8 @@ public class WeightedGraph extends UnweightedGraph {
         addNewVertex(identifier.toString(), newAdjacents, weights);
     }
 
-    public void addNewVertex(String identifier, String[] adjacents, Integer[] weights) {
-        Vertex current;
-        current = verticesMap.get(identifier);
+    protected void addNewVertex(String identifier, String[] adjacents, Integer[] weights) {
+        Vertex current = verticesMap.get(identifier);
         if (current == null) {
             current = new Vertex(identifier);
             vertices.add(current);
@@ -57,30 +57,84 @@ public class WeightedGraph extends UnweightedGraph {
         }
     }
 
-    public WeightedGraph kruskal() {
-        WeightedGraph minimalWeightGraph = new WeightedGraph();
+
+    public WeightedGraph prim() {
+        WeightedGraph minimalWeightTree = new WeightedGraph();
 
         Edge cheapest;
-        Vertex first, second;
-        HashMap<String, Integer> used = new HashMap<>();
-        PriorityQueue<Edge> edgesCopy = new PriorityQueue<>(edges);
-
-        while (used.size() != verticesMap.size()) {
-            cheapest = edgesCopy.poll();
-            first = cheapest.getEdge()[0];
-            second = cheapest.getEdge()[1];
-            if ((used.get(first.getIdentifier()) == null || used.get(first.getIdentifier()).compareTo(2) < 0)
-                    && (used.get(second.getIdentifier()) == null || used.get(second.getIdentifier()).compareTo(2) < 0)) {
-                minimalWeightGraph.addNewVertex(first.getIdentifier(),
-                        new String[] { second.getIdentifier() }, new Integer[] { cheapest.getCost() });
-
-                used.put(first.getIdentifier(), used.get(first.getIdentifier()) != null ?
-                        used.get(first.getIdentifier()) + 1 : 1);
-                used.put(second.getIdentifier(), used.get(second.getIdentifier()) != null ?
-                        used.get(second.getIdentifier()) + 1 : 1);
+        Vertex current = edges.peek().getEdge()[0];
+        HashSet<String> known = new HashSet<>();
+        PriorityQueue<Edge> accessible = new PriorityQueue<>();
+        while (known.size() != vertices.size() - 1) {
+            known.add(current.getIdentifier());
+            for (NeighborVertex adjacent : current.getAdjacents()) {
+                if (!known.contains(adjacent.getIdentifier())) {
+                    accessible.add(new Edge(current, adjacent, adjacent.getCostAway()));
+                }
+            }
+            cheapest = accessible.poll();
+            while (cheapest != null && known.contains(cheapest.getEdge()[1].getIdentifier())) {
+                cheapest = accessible.poll();
+            }
+            if (cheapest != null) {
+                minimalWeightTree.addEdge(cheapest);
+                current = cheapest.getEdge()[1];
+            } else {
+                break;
             }
         }
+        return minimalWeightTree;
+    }
 
-        return minimalWeightGraph;
+
+    public WeightedGraph kruskal() {
+        WeightedGraph minimalWeightTree = new WeightedGraph();
+
+        Edge cheapest;
+        String first, second;
+        HashSet<String> tempUnion;
+        HashMap<String, Integer> used = new HashMap<>();
+        HashMap<Integer, HashSet<String>> unions = new HashMap<>();
+        PriorityQueue<Edge> edgesCopy = new PriorityQueue<>(edges);
+        while (used.size() != vertices.size()) {
+            cheapest = edgesCopy.poll();
+            if (cheapest != null) {
+                first = cheapest.getEdge()[0].getIdentifier();
+                second = cheapest.getEdge()[1].getIdentifier();
+                if (used.get(first) == null || used.get(second) == null) {
+                    minimalWeightTree.addEdge(cheapest);
+                    if (used.get(first) != null) {
+                        used.put(second, used.get(first));
+                        tempUnion = unions.get(used.get(first));
+                        tempUnion.add(second);
+                        unions.put(used.get(first), tempUnion);
+                    } else if (used.get(second) != null) {
+                        used.put(first, used.get(second));
+                        tempUnion = unions.get(used.get(second));
+                        tempUnion.add(first);
+                        unions.put(used.get(second), tempUnion);
+                    } else {
+                        tempUnion = new HashSet<>();
+                        used.put(first, first.hashCode());
+                        used.put(second, first.hashCode());
+                        tempUnion.add(first);
+                        tempUnion.add(second);
+                        unions.put(first.hashCode(), tempUnion);
+                    }
+                } else if (used.get(first).compareTo(used.get(second)) != 0) {
+                    minimalWeightTree.addEdge(cheapest);
+                    tempUnion = unions.get(used.get(first));
+                    tempUnion.addAll(unions.get(used.get(second)));
+                    unions.put(used.get(first), tempUnion);
+                    for (String id : unions.get(used.get(second))) {
+                        used.put(id, used.get(first));
+                    }
+                    unions.remove(second);
+                }
+            } else {
+                break;
+            }
+        }
+        return minimalWeightTree;
     }
 }
