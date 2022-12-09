@@ -68,6 +68,7 @@ public class Main {
 
         System.out.println("Kruskal reduced graph : " + graph1.kruskal());
         System.out.println("Prim reduced graph : " + graph1.prim());
+        System.out.println("Dijkstra smallest paths : \n" + graph1.dijkstra("1"));
         System.out.println();
         System.out.println();
 
@@ -102,6 +103,7 @@ public class Main {
 
         System.out.println("Kruskal reduced graph : " + graph2.kruskal());
         System.out.println("Prim reduced graph : " + graph2.prim());
+        System.out.println("Dijkstra smallest paths : \n" + graph2.dijkstra("1"));
         System.out.println();
         System.out.println();
 
@@ -138,6 +140,7 @@ public class Main {
 
         System.out.println("Kruskal reduced graph : " + dag.kruskal());
         System.out.println("Prim reduced graph : " + dag.prim());
+        System.out.println("Dijkstra smallest paths : \n" + dag.dijkstra("1"));
         System.out.println();
         System.out.println();
     }
